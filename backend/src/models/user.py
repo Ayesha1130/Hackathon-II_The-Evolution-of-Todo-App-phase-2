@@ -6,7 +6,6 @@ class User(Base, TimestampMixin):
     """User model for authentication."""
 
     __tablename__ = "users"
-    # Ye line SQLAlchemy ko batati hai ke agar table pehle se session mein hai to use extend kare
     __table_args__ = {'extend_existing': True} 
 
     id = Column(String(36), primary_key=True, default=generate_uuid)
@@ -15,7 +14,8 @@ class User(Base, TimestampMixin):
     is_active = Column(Boolean, default=True)
     is_superuser = Column(Boolean, default=False)
 
-    # Relationships
+    # Relationships - Sirf Class Name use karein lekin path ko avoid karein
+    # back_populates wahi hona chahiye jo Task aur Category class mein define hai
     tasks = relationship("Task", back_populates="user", cascade="all, delete-orphan")
     categories = relationship("Category", back_populates="user", cascade="all, delete-orphan")
 

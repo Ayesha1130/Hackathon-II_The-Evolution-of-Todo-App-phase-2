@@ -1,7 +1,7 @@
 from sqlalchemy import Column, String, Boolean, DateTime, Text, Enum, ForeignKey, Integer
 from sqlalchemy.sql import func
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy.orm import sessionmaker, relationship,registry
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 import uuid
 
@@ -27,7 +27,10 @@ async_session_local = async_sessionmaker(
 )
 
 # Create base class for models
-Base = declarative_base()
+#Base = declarative_base()
+
+mapper_registry = registry()
+Base = mapper_registry.generate_base()
 
 
 def generate_uuid() -> str:
@@ -42,7 +45,10 @@ class TimestampMixin:
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
 
-async def get_db() -> AsyncSession:
+from typing import AsyncGenerator # Ye line file ke sabse upar imports mein add karein
+
+# Is line ko update karein:
+async def get_db() -> AsyncGenerator[AsyncSession, None]:
     """Dependency to get database session."""
     async with async_session_local() as session:
         try:

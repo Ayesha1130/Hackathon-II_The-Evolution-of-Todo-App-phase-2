@@ -2,10 +2,18 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import logging
+import src.models as models # Taake server start hote hi models register ho jayein
 
 from config import settings
 from models.database import async_engine
-from api import auth, tasks, categories_router
+#from api import auth, tasks, categories_router
+# Purani line (from api import auth...) ko delete karein aur ye likhein:
+from api.auth import router as auth_router
+from api.tasks import router as tasks_router
+# Agar categories_router api folder ke andar kisi file mein hai (e.g. categories.py):
+#from api.categories import router as categories_router
+from src.api.tasks import router as categories_router
+
 from api.exceptions import setup_exception_handlers
 
 # Configure logging
@@ -55,8 +63,14 @@ app.add_middleware(
 )
 
 # Include routers
-app.include_router(auth.router, prefix="/api/v1/auth", tags=["auth"])
-app.include_router(tasks.router, prefix="/api/v1/tasks", tags=["tasks"])
+#app.include_router(auth.router, prefix="/api/v1/auth", tags=["auth"])
+#app.include_router(tasks.router, prefix="/api/v1/tasks", tags=["tasks"])
+#app.include_router(categories_router, prefix="/api/v1/categories", tags=["categories"])
+
+
+# In lines ko aise update karein:
+app.include_router(auth_router, prefix="/api/v1/auth", tags=["auth"])
+app.include_router(tasks_router, prefix="/api/v1/tasks", tags=["tasks"])
 app.include_router(categories_router, prefix="/api/v1/categories", tags=["categories"])
 
 

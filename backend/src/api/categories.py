@@ -1,4 +1,5 @@
-# Re-export categories router from tasks module
-from api.tasks import router as categories_router
+from fastapi import APIRouter
+from src.api.tasks import router as tasks_router
 
-__all__ = ["categories_router"]
+# Hum sirf router ko export kar rahe hain taake main.py ko mil jaye
+router = tasks_router

@@ -54,6 +54,20 @@ export interface TaskUpdate {
   is_completed?: boolean
 }
 
+// Filters for tasks
+export interface TaskFilters {
+  category_id?: string
+  status?: 'completed' | 'pending'
+}
+
+// Task statistics
+export interface TaskStats {
+  total: number
+  completed: number
+  pending: number
+  byCategory: Record<string, number>
+}
+
 // Category types
 export interface Category {
   id: string

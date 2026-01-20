@@ -12,9 +12,12 @@ import type { Task } from '@/types'
 export default function DashboardPage() {
   const [showAddModal, setShowAddModal] = useState(false)
   const [editingTask, setEditingTask] = useState<Task | null>(null)
-  const [statusFilter, setStatusFilter] = useState<string | undefined>(undefined)
+  const [statusFilter, setStatusFilter] = useState<'active' | 'completed' | undefined>(undefined) // line 9
 
-  const { data: tasks, isLoading: tasksLoading } = useTasks({ status: statusFilter })
+  // --- Map 'active' to 'pending' to satisfy useTasks type ---
+  const { data: tasks, isLoading: tasksLoading } = useTasks({
+    status: statusFilter === 'active' ? 'pending' : statusFilter, // line 12
+  })
   const { data: stats } = useTaskStats()
   const toggleMutation = useToggleTask()
   const deleteMutation = useDeleteTask()
@@ -88,7 +91,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Modals remain the same but will use the theme internally */}
+      {/* Modals */}
       <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)} title="Add New Task">
         <TaskForm onClose={() => setShowAddModal(false)} onSuccess={() => setShowAddModal(false)} />
       </Modal>
